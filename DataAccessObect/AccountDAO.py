@@ -1,22 +1,28 @@
 import sys
 sys.path.append('./BusinessObject/')
+sys.path.append('./Util/')
 from Account import Account
+from HashPasswordUtil import HashPassword
 
 
 class AccountDAO:
     list : Account = []
+    hash = HashPassword()
+    
 
     def __init__(self):
+
         self.list : Account = []
-        self.list.append(Account(UserName="admin", Password="1"))
-        self.list.append(Account(UserName="Khai", Password="123"))
-        self.list.append(Account(UserName="MinhTruong", Password="321"))
+        self.list.append(Account(UserName="admin", Password=self.hash.DoHashPassword("1")))
+        self.list.append(Account(UserName="Khai", Password=self.hash.DoHashPassword("123")))
+        self.list.append(Account(UserName="MinhTruong", Password=self.hash.DoHashPassword("321")))
 
     def getList(self):
         for i in self.list:
             print(i)
     
     def AddAccount(self, UserName, Password, ConfirmPassword):
+        hash = HashPassword()
         try:
             if " " in UserName or " " in Password:
                 raise ValueError('Username or Password must not have space')
@@ -30,21 +36,28 @@ class AccountDAO:
                 if Password != ConfirmPassword:
                     raise ValueError('Password and Confirmination does not match !')
             
-            self.list.append(Account(UserName=UserName, Password=Password))
+            self.list.append(Account(UserName=UserName, Password=self.hash.DoHashPassword(Password)))
             print("account:", UserName, "registered successfully!")
         except ValueError as e:
             print("Register failed ! reason: " , e)
 
     def CheckLogin(self, UserName, Password):
-        check = False
-        for i in self.list:
-            if i.UserName.lower() == UserName.lower():
-                if i.Password == Password:
-                    print("account:["+UserName+"]verified Successfully !")
-                    check = True
+        try:
+            if " " in UserName or " " in Password:
+                raise ValueError('Username or Password must not have space')
 
-        if check is False:
-            print("Verficiation failed ! Username or Password does not match")
+            tempHash = self.hash.DoHashPassword(Password)
+            check = False
+            for i in self.list:
+                if i.UserName.lower() == UserName.lower():
+                    if i.Password == tempHash:
+                        print("account:["+UserName+"]verified Successfully !")
+                        check = True
+
+            if check is False:
+                raise ValueError('Verficiation failed ! Username or Password does not match')
+        except ValueError as e:
+            print("Verficiation failed ! reason: " , e)
         return check
                     
     def SearchByKeyword(self, keyword):

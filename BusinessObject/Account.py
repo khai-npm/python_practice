@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 class Account(BaseModel):
     UserName : str
-    Password : str
+    Password : bytes
 
 
 
