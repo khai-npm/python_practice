@@ -1,9 +1,17 @@
 from pydantic import BaseModel
+import sys
+sys.path.append('./Util/')
+from RoleDefinitionUtil import RoleDefine
+
+
 class Account(BaseModel):
+    UserID: int
     UserName : str
     Password : bytes
-
-
+    Fullname: str
+    PhoneNumber: str
+    descripition: str
+    RoleID : str
 
 
 
