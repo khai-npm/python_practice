@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-class RoleDefine(BaseModel):
+class Role(BaseModel):
     RoleID : int
     RoleName : str
-    RolePermission : str = []
+    RolePermission : list = []

@@ -108,12 +108,15 @@ class AccountDAO:
     def SearchByKeyword(self, keyword):
         result : Account = []
         for i in self.list:
-            if keyword.lower().strip() in i.UserName.lower().strip():
+            if keyword.lower().strip() in i.UserName.lower().strip() or keyword.lower().strip() in i.PhoneNumber or keyword.lower().strip() in i.Fullname or keyword.lower().strip() in i.descripition:
                 result.append(i)
 
         for i2 in result:
+            print("------["+ i2.Fullname +"]------")
             print("[UID:"+ str(i2.UserID) +"]: "+ i2.UserName +" (Role: '" + i2.RoleID + "')")
-    
+            print("phone number: " + i2.PhoneNumber)
+            print("descripition: " + i2.descripition)
+            print("-------------")
     def ViewAccountDetail(self, session):
         result : Account
         for i in self.list:
