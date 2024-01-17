@@ -105,7 +105,9 @@ while repeat_flag is True:
 
         if "All" in PermissionSessionList or "EditRole" in PermissionSessionList: 
             newMenuPer.AddChoice("add new role")
+            newMenuPer.AddChoice("Update exist role's permission")
         else:
+            newMenuPer.AddChoice("-")
             newMenuPer.AddChoice("-")
 
         newMenuPer.AddChoice("Log out")
@@ -337,7 +339,15 @@ while repeat_flag is True:
                 else:
                     os.system('cls')
                     SessionDB.getAllRole()
-                    
+                    try:
+                        print("choose role to view detail")
+                        choice = int(input())
+                        if choice < 0 or choice > len(SessionRoleDB.roleList)-1:
+                            raise ValueError('wrong input')
+                        
+                        SessionRoleDB.ViewRoleDetai(SessionDB.Role[choice])
+                    except ValueError as e:
+                        print("Error in Viewrole:" + str(e))
 
                 print()
                 print("press enter to continue....")
@@ -364,12 +374,21 @@ while repeat_flag is True:
                     print(" -=note: 'All' is able to access all administator function=-")
                     print("Example: All, ViewAcc,... ")
 
-                    IPpermission = input().replace(" ", "")
-                    perList = IPpermission.split(",")
+                    pattern = ["All", "ViewAcc", "EditAcc", "ViewRole", "EditRole"]
 
-                    SessionDB.AddnewRole(newRole)
-                    SessionRoleDB.AddnewRole(newRole, perList)
                     
+                    try:
+                        IPpermission = input().replace(" ", "")
+                        perList = IPpermission.split(",")
+                        for i in perList:
+                            if i not in pattern:
+                                raise ValueError('wrong Permission input')
+                        
+
+                        SessionDB.AddnewRole(newRole)
+                        SessionRoleDB.AddnewRole(newRole, perList)
+                    except ValueError as e:
+                        print("Error: " + str(e))
 
                 print()
                 print("press enter to continue....")
@@ -377,11 +396,51 @@ while repeat_flag is True:
                 temp = None
 
             case 9:
+                if "All" not in PermissionSessionList and "EditRole" not in PermissionSessionList:
+                    os.system('cls')
+                    print("Not supported yet!")
+                else:
+                    os.system('cls')
+                    SessionDB.getAllRole()
+                    try:
+                        print("choose role to update:")
+                        choice = int(input())
+                        if choice < 0 or choice > len(SessionRoleDB.roleList)-1:
+                            raise ValueError('wrong input')
+                        os.system('cls')
+                        print("All")
+                        print("ViewAcc")
+                        print("EditAcc")
+                        print("ViewRole")
+                        print("EditRole")
+                        print("------------------------------")
+                        print("add permission for this role, using ',' for multiple permission")
+                        print(" -=note: 'All' is able to access all administator function=-")
+                        print("Example: All, ViewAcc,... ")
+
+                        pattern = ["All", "ViewAcc", "EditAcc", "ViewRole", "EditRole"]
+                        IPpermission = input().replace(" ", "")
+                        perList = IPpermission.split(",")
+                        for i in perList:
+                            if i not in pattern:
+                                raise ValueError('wrong Permission input')
+                        SessionRoleDB.UpdateRolePermission(SessionDB.Role[choice], perList)
+                    except ValueError as e:
+                        print("Error in Viewrole:" + str(e))
+
+                    
+
+                print()
+                print("press enter to continue....")
+                temp = input()
+                temp = None
+
+            case 10:
                 os.system('cls')
                 Session = "null"
                 SessionRole = SessionDB.Role[0]
                 
-            case 10:
+            case 11:
                 os.system('cls')
                 repeat_flag = False 
 '''
